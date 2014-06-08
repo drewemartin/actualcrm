@@ -186,10 +186,20 @@ class Rolodex
 	  	puts "[3] Email"
 	  	puts "[4] Notes" 
 	  	attributes_choice = gets.chomp.to_i
+	  	puts "Selected attributes"
 	  	case attributes_choice
 	  		when 1 then @contacts.each do |contact|
-	  			puts "#{@contacts.index(contact) +1}) #{contact.first_name}"
+	  			puts "#{@contacts.index(contact) +1}) #{contact.first_name} (first name)"
 	  			end
+	  		when 2 then @contacts.each do |contact|
+	  			puts "#{@contacts.index(contact) +1}) #{contact.last_name} (last name)"
+				end
+			when 3 then @contacts.each do |contact|
+	  			puts "#{@contacts.index(contact) +1}) #{contact.email_address} (email)"
+				end
+			when 4 then @contacts.each do |contact|
+	  			puts "#{@contacts.index(contact) +1}) #{contact.notes} (notes)"
+				end
 	  	end
 	end 
 end
