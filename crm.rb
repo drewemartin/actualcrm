@@ -1,6 +1,11 @@
 class CRM
 
-	#attr_accessor :name
+	attr_accessor :name, :rolodex
+
+	def self.run(name)
+		crm = CRM.new(name)
+		crm.main_menu
+	end
 
 	def initialize(name)
 		@name = name
@@ -32,7 +37,7 @@ class CRM
 		when 1 then add_new_contact #working on
 		when 2 then modify_contact
 		when 3 then delete_contact
-		when 4 then display_contacts
+		when 4 then display_rolodex_contacts
 		when 5 then display_attribute
 		when 6
 			puts "Goodbye"
@@ -50,47 +55,58 @@ class CRM
 		last_name = gets.chomp
 		print "what is your email address: "
 		email_address = gets.chomp
-		print "any notes?"
+		print "any notes? "
 		notes = gets.chomp
 		puts "your information is #{first_name}, #{last_name}, #{email_address}, #{notes}"
-		puts first_name + last_name + email_address + notes
-		contact_profile = Contact.new(first_name, last_name, email_address, notes)
-		puts contact_profile.inspect
-		@rolodex.add_contact(contact_profile)
+		# contact_profile = Contact.new(first_name, last_name, email_address, notes)
+		# puts contact_profile.inspect
+		# puts contact_profile.email
+		@rolodex.add_contact(Contact.new(first_name, last_name, email_address, notes))
 		main_menu
+	end
 
+	def display_rolodex_contacts
+		@rolodex.display_contacts
+		main_menu
+	end
+
+	def delete_contact
+	@rolodex.display_contacts
+	@rolodex.delete_from_contacts_array
+	puts "***** Current Contacts *****"
+	@rolodex.display_contacts
+	main_menu
 	end
 
 	def modify_contact
-		puts "to verify your account please provide your email address"
-		id_verification = gets.chomp.downcase
-		@rolodex.contacts.each do |contact|
-			if contact.email_address == 'poop@poop.com'
-				puts "hooray"
-			end
-		end
+		@rolodex.display_contacts
+		@rolodex.modify_contacts_in_contacts_array
+		main_menu
 	end
-
-
-
 end
 
 class Contact
 
-	attr_accessor :id
+	attr_accessor :id, :first_name, :last_name, :email_address, :notes
 
 	def initialize (first_name, last_name, email_address, notes)
 		@first_name = first_name
 		@last_name = last_name
 		@email_address = email_address
 		@notes = notes
-		@id = 0
+
 	end
+
+	def to_s
+		"#{first_name}, #{last_name}, #{email_address}, #{notes}"
+	end
+
 end
 
 class Rolodex
-
-	attr_accessor :contacts
+# rolodex.first_name = Josh
+	attr_accessor :first_name, :last_name, :email_address, :notes, :id, :contacts
+	
 
 	def initialize
 		@contacts = []
@@ -98,16 +114,48 @@ class Rolodex
 	end
 
 
-
 	def add_contact(contact)
 		contact.id = @id
 		@contacts << contact
 		@id += 1
 	end
+
+	def display_contacts
+		@contacts.each do |contact| 
+			puts "Contact ID: #{@contacts.index(contact)}"
+			puts "First name: " + contact.first_name
+			puts "Last name: " + contact.last_name
+			puts "Email: " + contact.email_address
+			puts "Notes: " + contact.notes
+			puts "============================"
+		end
+	end
+
+	def delete_from_contacts_array
+		puts "Please provide the contact ID of the contact you wish to delete"
+		id_to_delete = gets.chomp.to_i
+		puts "You have chosen contact ID #{id_to_delete} to delete"
+		@contacts.delete_at(id_to_delete)
+		puts "Contact ID #{id_to_delete} was deleted"
+	end
+
+	def modify_contacts_in_contacts_array
+		puts "Please provide the contact ID of the contact you wish to delete"
+		contact_to_modify = gets.chomp.to_i
+		puts "You have chosen contact ID #{contact_to_modify} to modify"
+		puts @contacts[id_to_modify]
+		puts "Modification options"
+		puts "[1] Modify first name"
+		puts "[2] Modify last name"
+	  	puts "[3] Modify email"
+	  	puts "[4] Modify notes"
+	  	part_of_contact_to_modify = gets.chomp.to_i - 1
+	  	puts @contacts[id_to_modify, part_of_contact_to_modify] 
+	end
 end
 
-h = CRM.new("drew")
-h.main_menu
+CRM.run("drew")
+
 
 
 
